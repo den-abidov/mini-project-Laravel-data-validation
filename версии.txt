@@ -1,0 +1,31 @@
+версия master
+=============
+Создал Laravel проект :
+$ composer create-project laravel/laravel mini-project-1
+
+В phpMyAdmin создал БД для данного проекта : mini-project-1
+
+В Laravel, в .env прописал название БД, пользователя и пароль.
+
+Дописал нужные мне колонки/поля в файл миграции database/migrations/...create_users_table.php
+Сделал миграцию :
+$ php artisan migrate
+
+Сгенерировал ресурсный контроллер UsersController :
+$ php artisan make:controller -r UsersController
+В него добавил метод showAddUserPage()
+
+В роутер web.php добавил маршрут 'add-user' => 'UsersController@showAddUserPage'
+
+
+Фронт-энд :
+Добавил страницу resources/view/add-user.blade.php
+Добавил файл resources/sass/_add-user.scss
+Включил _add-user.scss => app.scss
+
+Установил модули из package.json :
+$ npm run install
+
+Запустил Laravel Mix - компиляция CSS и JS для фронт-энда :
+$ npm run watch
+
