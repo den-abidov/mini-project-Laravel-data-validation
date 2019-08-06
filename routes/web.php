@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::resource('users','UsersController');
+// В него входят следующие запросы :
 // Route::get('/users/create', 'UsersController@create');
 // Route::post('/users','UsersController@store');
 

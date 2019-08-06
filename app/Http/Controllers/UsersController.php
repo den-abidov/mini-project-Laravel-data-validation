@@ -33,11 +33,13 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(\App\Http\Requests\StoreUser $request)
     {
         // создай (модель) нового пользователя
         $user = new \App\User;
 
+        /* 
+        Валидацию перенесли => StoreUser@rules 
         
         request()->validate([
             'sponsor_id'=>'required|exists:users',
@@ -47,19 +49,22 @@ class UsersController extends Controller
             'password'=>'required|min:3|max:20'
         ]);
         
-        /*request()->validate([
-            'sponsor-id'=>['required','exists:users'],
-            'name'=>['required','string','max:60'],
-            'phone'=>['required','min:10','max:12'],
-            'email'=>['required','unique:users','email'],
-            'password'=>['required','min:3','max:20']
-        ]);*/
-
         $user->sponsor_id = request('sponsor_id');
         $user->name = request('name');
         $user->phone = request('phone');
         $user->email = request('email');
-        $user->password = request('password');
+        $user->password = request('password');        
+        */
+        
+        // The incoming request is valid...
+        // Retrieve the validated input data...
+        $validated = $request->validated();
+
+        $user->sponsor_id = $validated['sponsor_id'];
+        $user->name = $validated['name'];
+        $user->phone = $validated['phone'];
+        $user->email = $validated['email'];
+        $user->password = $validated['password'];
 
         /*$user->sponsor_id = 1;
         $user->name = 'Денис';

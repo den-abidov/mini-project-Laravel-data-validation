@@ -1,0 +1,95 @@
+Часть 1. Подготовка проекта
+===========================
+Создал Laravel проект :
+$ composer create-project laravel/laravel mini-project-1
+
+В phpMyAdmin создал БД для данного проекта : mini-project-1
+
+В Laravel, в .env прописал название БД, пользователя и пароль.
+
+Дописал нужные мне колонки/поля в файл миграции database/migrations/...create_users_table.php
+Сделал миграцию :
+$ php artisan migrate
+
+Сгенерировал ресурсный контроллер UsersController :
+$ php artisan make:controller -r UsersController
+
+В роутер web.php добавил ресурсный маршрут:
+Route::resource('users','UsersController');
+
+Подготовка фронт-энда :
+
+Создал папку      resources/view/users/
+В ней создал файл resources/view/users/create.blade.php - это форма для добавления нового пользователя
+
+В Laravel,
+запрос get 'users/create' => UsersController@create - покажет форму create.blade.php
+А из этой формы, 
+запрос post 'users' => UsersController@store 
+Там код, который полученит данные из формы, провалидирует их, сохранит запись в БД, редиректнит на нужную страницу.
+
+Подготовил SASS файл для create.blade.php :resources/sass/_users-create.scss
+Включил _users-create.scss => app.scss
+
+Установил модули из package.json :
+$ npm run install
+
+Запустил Laravel Mix - компиляция CSS и JS для фронт-энда :
+$ npm run watch
+
+См. файлы :
+web.php
+resources/view/users/create.blade.php
+resources/sass/_users-create.scss
+resources/sass/app.scss
+app/Http/Controllers/UsersController@create
+app/Http/Controllers/UsersController@store
+
+Часть 2. Код для валидации
+==========================
+Валидировать данные можно сразу в контроллере UsersController@post добавив :
+request()->validate([
+            'sponsor_id'=>'required|exists:users',
+            'name'=>'required|string|max:60',
+            'phone'=>'required|min:10|max:12',
+            'email'=>'required|unique:users|email',
+            'password'=>'required|min:3|max:20'
+            ]);
+
+Чтобы не "захламлять контроллер", вынесем логику валидации отдельно, в класс FormRequest.
+https://laravel.com/docs/5.8/validation#form-request-validation
+
+$php artisan make:request StoreUser
+=> app\Requests\StoreUser.php
+
+Код валидации перенесли 
+UsersController@store => StoreUser@rules
+
+Заменили 
+UsersController@store(Request $request) => UsersController@store(StoreUser $request)
+
+Чтобы не возникало ошибки 403, 
+в UsersController@authorize : return false; => return true;
+
+Часть 3. Русифицируем ошибки валидации
+======================================
+Как определить свои ошибки валидации : https://laravel.com/docs/5.8/validation#customizing-the-error-messages
+
+Метод 1 - Общий
+---------------
+Как русифировать Laravel, включая ошибки :
+
+1. Установить в проект языковые файлы :
+$ composer require caouecs/laravel-lang:~4.0
+Это установит папку с русскозычными файлами сюда : vendor/caouecs/src/ru : *.php
+
+2. Скопировать эту папку ru/*.php сюда => resources/lang
+
+3. В config/app.php измени:  'locale' => 'ru'
+
+Правда русификация ошибок валидации частично внятная : "Выбранное значение для sponsor id некорректно."
+Т.е. в любом случае лучше самому явно прописать ошибки.
+
+Метод 2 - Точечный
+------------------
+Создадим отдельный экземпляр класса Validator, пропишем внутри него правила валидации и текст ошибок.
