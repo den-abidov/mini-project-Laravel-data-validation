@@ -15,4 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/add-user', 'UsersController@showAddUserPage');
+Route::resource('users','UsersController');
+// Route::get('/users/create', 'UsersController@create');
+// Route::post('/users','UsersController@store');
+

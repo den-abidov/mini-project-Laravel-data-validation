@@ -10659,13 +10659,13 @@ form {
   margin: auto;
 }
 
+form .red-border {
+  border: 1px solid red;
+  color: red;
+}
+
 form #button-div {
   margin-top: 20px;
   text-align: center;
-}
-
-form #success-div,
-form #error-div {
-  display: none;
 }
 

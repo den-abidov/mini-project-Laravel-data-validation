@@ -14,6 +14,12 @@ form
   max-width:300px;
   margin:auto;
 
+  .red-border
+  {
+    border:1px solid red;
+    color:red;
+  }
+
   #button-div
   {
     margin-top:20px;
@@ -22,6 +28,6 @@ form
 
   #success-div, #error-div
   {
-    display: none;
+    //display: none;
   }
 }

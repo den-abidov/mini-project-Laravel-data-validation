@@ -23,7 +23,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        $message = 'Первичное обращение' ;
+        return view('users/create')->with('message',$message);
     }
 
     /**
@@ -34,7 +35,46 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // создай (модель) нового пользователя
+        $user = new \App\User;
+
+        
+        request()->validate([
+            'sponsor_id'=>'required|exists:users',
+            'name'=>'required|string|max:60',
+            'phone'=>'required|min:10|max:12',
+            'email'=>'required|unique:users|email',
+            'password'=>'required|min:3|max:20'
+        ]);
+        
+        /*request()->validate([
+            'sponsor-id'=>['required','exists:users'],
+            'name'=>['required','string','max:60'],
+            'phone'=>['required','min:10','max:12'],
+            'email'=>['required','unique:users','email'],
+            'password'=>['required','min:3','max:20']
+        ]);*/
+
+        $user->sponsor_id = request('sponsor_id');
+        $user->name = request('name');
+        $user->phone = request('phone');
+        $user->email = request('email');
+        $user->password = request('password');
+
+        /*$user->sponsor_id = 1;
+        $user->name = 'Денис';
+        $user->phone = '89528900108';
+        $user->email = 'den-abidov@yandex.ru';
+        $user->password = 'helloworld';*/
+
+        // сохрани запись в таблицу
+        $user->save();
+
+        // перенаправь обратно на страницу добавления нового пользователя
+        $message = "пользователь добавлен";
+        return view('/users/create')->with('message',$message);
+        //redirect('/users/create');
+
     }
 
     /**
@@ -82,8 +122,4 @@ class UsersController extends Controller
         //
     }
 
-    public function showAddUserPage()
-    {
-        return view('add-user');
-    }
 }
