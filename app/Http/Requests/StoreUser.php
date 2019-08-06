@@ -31,9 +31,27 @@ class StoreUser extends FormRequest
         return [
             'sponsor_id'=>'required|exists:users',
             'name'=>'required|string|max:60',
-            'phone'=>'required|min:10|max:12',
+            'phone'=>'required|min:10|max:20',
             'email'=>'required|unique:users|email',
-            'password'=>'required|min:3|max:20'
+            'password'=>'required|min:5|max:20'
         ];
     }
+    public function messages()
+    {
+        return [
+            'sponsor_id.required'=>'укажите id-номер Вашего спонсора',
+            'sponsor_id.exists'=>'спонсор с таким id-номером не найден',
+            'name.required'=>'укажите Ваше полное ФИО',
+            'name.string'=>'ФИО должно состоять из букв',
+            'name.max'=>'ФИО не должно превышать 60 символов',
+            'phone.required'=>'укажите Ваш номер телефона',
+            'phone.min'=>'укажите в формате 89528900109',
+            'phone.max'=>'укажите в формате 89528900109',
+            'email.required'=>'укажите Вашу электронную почту',
+            'email.unique'=>'этот почтовый ящик уже кем-то зарегистрирован',
+            'password.required'=>'укажите пароль',
+            'password.min'=>'пароль должен содержать от 5 до 20 символов',
+            'password.max'=>'пароль должен содержать от 5 до 20 символов'
+        ];
+    }    
 }
